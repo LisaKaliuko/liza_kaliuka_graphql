@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
 
-function App() {
+import { GET_ALL_USERS, UserResponseType } from './apollo/users.query';
+import AllUsers from './components/AllUsers';
+
+const App = () => {
+  const [getAllUsers, { data: users, loading: usersLoading, error: usersError }] =
+    useLazyQuery<UserResponseType>(GET_ALL_USERS);
+
+  useEffect(() => {
+    getAllUsers();
+  }, [getAllUsers]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>App</p>
+      <AllUsers users={users} loading={usersLoading} error={!!usersError} />
     </div>
   );
-}
+};
 
 export default App;
